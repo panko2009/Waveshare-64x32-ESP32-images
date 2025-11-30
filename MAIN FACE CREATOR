@@ -1,0 +1,579 @@
+#include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
+#include <pgmspace.h>
+
+// ---------------- Panel config ----------------
+#define PANEL_RES_X 64
+#define PANEL_RES_Y 32
+#define PANEL_CHAIN 1
+
+HUB75_I2S_CFG cfg(PANEL_RES_X, PANEL_RES_Y, PANEL_CHAIN);
+MatrixPanel_I2S_DMA* matrix = nullptr;
+
+// ---------- blinking timing ----------
+const unsigned long BLINK_INTERVAL = 5000;  // blink every 5 seconds
+const unsigned long BLINK_DURATION = 500;   // eyes closed for 0.5 seconds
+
+unsigned long lastBlinkTime = 0;
+bool eyesOpen = true;     // current eye state
+
+// ---------- state from Raspberry Pi ----------
+
+enum EyeType {
+  EYE_NONE,
+  EYE_NORMAL,
+  EYE_HAPPY,
+  EYE_ANGRY,
+  EYE_SCARED
+};
+
+enum MouthType {
+  MOUTH_NONE,
+  MOUTH_UWU,       // uwuClosed
+  MOUTH_UWU_OPEN   // uwuOpen
+};
+
+enum ImageType {
+  IMAGE_NONE,
+  IMAGE_1,         // IMAGE1
+  // add more (IMAGE_2, IMAGE_3...) as you build your library
+};
+
+EyeType   currentEyeType   = EYE_NORMAL;
+MouthType currentMouthType = MOUTH_UWU;
+bool      eyeFilled        = true;        // 1 = filled, 0 = hollow
+bool      isTalking        = false;       // true while TTS is playing
+
+ImageType currentImage     = IMAGE_NONE;  // active full-screen image
+
+// ---------------- IMAGE DATA PLACEHOLDER ----------------
+// Later your PNG converter will generate arrays like this.
+// For now this is just all black so it compiles.
+
+const uint8_t IMAGE1_DATA[PANEL_RES_Y][PANEL_RES_X][3] PROGMEM = {{{0}}};
+// When you have real data, each entry is {R, G, B} for pixel (x, y)
+
+// Draw an image from a 64x32 RGB array in PROGMEM
+void drawImageFromArray(const uint8_t img[PANEL_RES_Y][PANEL_RES_X][3]) {
+  for (int y = 0; y < PANEL_RES_Y; y++) {
+    for (int x = 0; x < PANEL_RES_X; x++) {
+      uint8_t r = pgm_read_byte(&img[y][x][0]);
+      uint8_t g = pgm_read_byte(&img[y][x][1]);
+      uint8_t b = pgm_read_byte(&img[y][x][2]);
+
+      if (r || g || b) {
+        matrix->drawPixelRGB888(x, y, r, g, b);
+      }
+    }
+  }
+}
+
+// helper to draw the current image
+void drawCurrentImage() {
+  switch (currentImage) {
+    case IMAGE_1:
+      drawImageFromArray(IMAGE1_DATA);
+      break;
+
+    case IMAGE_NONE:
+    default:
+      matrix->fillScreen(0);
+      break;
+  }
+}
+
+// ---------------- YOUR EYE / MOUTH ART FUNCTIONS ----------------
+// You already have exact pixel art for these. I include some fully,
+// and for the others you can drop in your existing versions.
+
+// Normal outer eye shape
+void OuterEyes () {
+  matrix->drawPixelRGB888(16, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 15, 151, 200, 56);
+}
+
+void InnerEyes() {
+  matrix->drawPixelRGB888(17, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 14, 151, 200, 56);
+}
+
+// For now, use the same art for HAPPY / ANGRY / SCARED.
+// You can replace these with your own AngryOuter(), HappyOuter(), etc.
+
+void HappyOuter()  { OuterEyes(); }
+void HappyInner()  { InnerEyes(); }
+void AngryOuter()  { OuterEyes(); }  // replace with your angry art
+void AngryInner()  { InnerEyes(); }
+void ScaredOuter() { OuterEyes(); }  // replace with your scared art
+void ScaredInner() { InnerEyes(); }
+
+// Mouth art
+void uwuClosed() {
+  matrix->drawPixelRGB888(30, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(31, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(32, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(33, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(23, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(29, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(34, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(40, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(24, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(28, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(35, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(39, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(25, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(26, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(27, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(36, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(37, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(38, 21, 151, 200, 56);
+}
+
+void uwuOpen() {
+  uwuClosed();
+  matrix->drawPixelRGB888(28, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(29, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(34, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(35, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(30, 23, 151, 200, 56);
+  matrix->drawPixelRGB888(31, 23, 151, 200, 56);
+  matrix->drawPixelRGB888(32, 23, 151, 200, 56);
+  matrix->drawPixelRGB888(33, 23, 151, 200, 56);
+}
+
+// Blink eyelids over eyes
+void blink() {
+  matrix->drawPixelRGB888(20, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 15, 151, 200, 56);
+}
+
+// ---------------- EXPRESSION DRAWING WITH FILL FLAG ----------------
+
+// pick the art for eyes based on type and eyeFilled
+void drawEyesByType() {
+  if (currentEyeType == EYE_NONE) {
+    return;
+  }
+
+  switch (currentEyeType) {
+    case EYE_NORMAL:
+      if (eyeFilled) {
+        OuterEyes();
+        InnerEyes();
+      } else {
+        OuterEyes();           // hollow normal
+      }
+      break;
+
+    case EYE_HAPPY:
+      if (eyeFilled) {
+        HappyOuter();
+        HappyInner();
+      } else {
+        HappyOuter();          // hollow happy
+      }
+      break;
+
+    case EYE_ANGRY:
+      if (eyeFilled) {
+        AngryOuter();
+        AngryInner();
+      } else {
+        AngryOuter();          // hollow angry
+      }
+      break;
+
+    case EYE_SCARED:
+      if (eyeFilled) {
+        ScaredOuter();
+        ScaredInner();
+      } else {
+        ScaredOuter();         // hollow scared
+      }
+      break;
+
+    default:
+      // fallback behave like normal
+      if (eyeFilled) {
+        OuterEyes();
+        InnerEyes();
+      } else {
+        OuterEyes();
+      }
+      break;
+  }
+}
+
+// choose mouth art and talking state
+void drawMouthByType() {
+  if (currentMouthType == MOUTH_NONE) {
+    return;
+  }
+
+  if (isTalking) {
+    // always open while talking
+    uwuOpen();
+    return;
+  }
+
+  switch (currentMouthType) {
+    case MOUTH_UWU:
+      uwuClosed();
+      break;
+    case MOUTH_UWU_OPEN:
+      uwuOpen();
+      break;
+    case MOUTH_NONE:
+    default:
+      break;
+  }
+}
+
+// update blink state (only when not in image mode)
+void updateBlink(unsigned long now) {
+  if (currentEyeType == EYE_NONE) {
+    eyesOpen = true;
+    lastBlinkTime = now;
+    return;
+  }
+
+  if (eyesOpen) {
+    if (now - lastBlinkTime >= BLINK_INTERVAL) {
+      eyesOpen = false;
+      lastBlinkTime = now;
+    }
+  } else {
+    if (now - lastBlinkTime >= BLINK_DURATION) {
+      eyesOpen = true;
+      lastBlinkTime = now;
+    }
+  }
+}
+
+// draw full face frame: eyes (maybe blinking) + mouth
+void drawFaceFrame() {
+  matrix->fillScreen(0);
+
+  // eyes
+  if (currentEyeType != EYE_NONE) {
+    if (eyesOpen) {
+      drawEyesByType();
+    } else {
+      blink();
+    }
+  }
+
+  // mouth
+  drawMouthByType();
+}
+
+// ---------------- SERIAL COMMAND PARSING ----------------
+
+String inputBuffer;
+
+// parse face command like "HAPPY:1:UWU"
+void parseFaceCommand(const String &cmd) {
+  int firstColon  = cmd.indexOf(':');
+  int secondColon = cmd.indexOf(':', firstColon + 1);
+  if (firstColon == -1 || secondColon == -1) return;
+
+  String eyeStr    = cmd.substring(0, firstColon);
+  String filledStr = cmd.substring(firstColon + 1, secondColon);
+  String mouthStr  = cmd.substring(secondColon + 1);
+
+  eyeStr.trim();
+  filledStr.trim();
+  mouthStr.trim();
+
+  // eye type
+  if (eyeStr.equalsIgnoreCase("NONE"))       currentEyeType = EYE_NONE;
+  else if (eyeStr.equalsIgnoreCase("NORMAL"))currentEyeType = EYE_NORMAL;
+  else if (eyeStr.equalsIgnoreCase("HAPPY")) currentEyeType = EYE_HAPPY;
+  else if (eyeStr.equalsIgnoreCase("ANGRY")) currentEyeType = EYE_ANGRY;
+  else if (eyeStr.equalsIgnoreCase("SCARED"))currentEyeType = EYE_SCARED;
+  else                                       currentEyeType = EYE_NORMAL;
+
+  // filled flag
+  eyeFilled = (filledStr == "1" || filledStr.equalsIgnoreCase("TRUE"));
+
+  // mouth type
+  if (mouthStr.equalsIgnoreCase("NONE"))         currentMouthType = MOUTH_NONE;
+  else if (mouthStr.equalsIgnoreCase("UWU"))     currentMouthType = MOUTH_UWU;
+  else if (mouthStr.equalsIgnoreCase("UWUOPEN")) currentMouthType = MOUTH_UWU_OPEN;
+  else                                           currentMouthType = MOUTH_UWU;
+
+  // reset blink timing
+  lastBlinkTime = millis();
+  eyesOpen = true;
+}
+
+// parse image commands: "IMAGE1", "IMAGE_OFF", "IMAGE0"
+void parseImageCommand(const String &cmd) {
+  if (cmd.equalsIgnoreCase("IMAGE1")) {
+    currentImage = IMAGE_1;
+  } else if (cmd.equalsIgnoreCase("IMAGE0") ||
+             cmd.equalsIgnoreCase("IMAGE_OFF") ||
+             cmd.equalsIgnoreCase("IMAGE_NONE")) {
+    currentImage = IMAGE_NONE;
+  }
+}
+
+// parse talking command: "TALK:1" or "TALK:0"
+void parseTalkCommand(const String &cmd) {
+  int colon = cmd.indexOf(':');
+  if (colon == -1) return;
+  String val = cmd.substring(colon + 1);
+  val.trim();
+
+  isTalking = (val == "1" || val.equalsIgnoreCase("TRUE"));
+}
+
+// process a full command line
+void handleCommand(String cmd) {
+  cmd.trim();
+  if (cmd.length() == 0) return;
+
+  // TALK first
+  if (cmd.startsWith("TALK:") || cmd.startsWith("talk:")) {
+    parseTalkCommand(cmd);
+    return;
+  }
+
+  // IMAGE commands
+  if (cmd.startsWith("IMAGE") || cmd.startsWith("image")) {
+    parseImageCommand(cmd);
+    return;
+  }
+
+  // Face (eye:fill:mouth)
+  if (cmd.indexOf(':') != -1) {
+    parseFaceCommand(cmd);
+    return;
+  }
+
+  // You could add more command types here later
+}
+
+// read serial and build lines terminated by newline
+void readSerialCommands() {
+  while (Serial.available() > 0) {
+    char c = (char)Serial.read();
+
+    if (c == '\n' || c == '\r') {
+      if (inputBuffer.length() > 0) {
+        handleCommand(inputBuffer);
+        inputBuffer = "";
+      }
+    } else {
+      if (inputBuffer.length() < 80) {
+        inputBuffer += c;
+      }
+    }
+  }
+}
+
+// ---------------- SETUP / LOOP ----------------
+
+void setup() {
+  Serial.begin(115200);
+
+  matrix = new MatrixPanel_I2S_DMA(cfg);
+  matrix->begin();
+  matrix->setBrightness8(50);
+  matrix->fillScreen(0);
+
+  lastBlinkTime = millis();
+}
+
+void loop() {
+  unsigned long now = millis();
+
+  // 1) Read incoming commands from RPi or Serial Monitor
+  readSerialCommands();
+
+  // 2) Hierarchy: IMAGE > FACE (eyes + mouth + blink)
+  if (currentImage != IMAGE_NONE) {
+    drawCurrentImage();
+    // reset blink so it does not stutter when image clears
+    lastBlinkTime = now;
+    eyesOpen = true;
+  } else {
+    updateBlink(now);
+    drawFaceFrame();
+  }
+
+  delay(30);
+}
