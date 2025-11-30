@@ -1,0 +1,233 @@
+void OuterEyes () {
+  matrix->drawPixelRGB888(16, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 6, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 15, 151, 200, 56);
+}
+
+void InnerEyes() {
+  matrix->drawPixelRGB888(17, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 7, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 8, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 9, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 10, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 11, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 14, 151, 200, 56);
+}
+
+// For now, use the same art for HAPPY / ANGRY / SCARED.
+// You can replace these with your own AngryOuter(), HappyOuter(), etc.
+
+void HappyOuter()  { OuterEyes(); }
+void HappyInner()  { InnerEyes(); }
+void AngryOuter()  { OuterEyes(); }  // replace with your angry art
+void AngryInner()  { InnerEyes(); }
+void ScaredOuter() { OuterEyes(); }  // replace with your scared art
+void ScaredInner() { InnerEyes(); }
+
+// Mouth art
+void uwuClosed() {
+  matrix->drawPixelRGB888(30, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(31, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(32, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(33, 18, 151, 200, 56);
+  matrix->drawPixelRGB888(23, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(29, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(34, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(40, 19, 151, 200, 56);
+  matrix->drawPixelRGB888(24, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(28, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(35, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(39, 20, 151, 200, 56);
+  matrix->drawPixelRGB888(25, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(26, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(27, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(36, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(37, 21, 151, 200, 56);
+  matrix->drawPixelRGB888(38, 21, 151, 200, 56);
+}
+
+void uwuOpen() {
+  uwuClosed();
+  matrix->drawPixelRGB888(28, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(29, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(34, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(35, 22, 151, 200, 56);
+  matrix->drawPixelRGB888(30, 23, 151, 200, 56);
+  matrix->drawPixelRGB888(31, 23, 151, 200, 56);
+  matrix->drawPixelRGB888(32, 23, 151, 200, 56);
+  matrix->drawPixelRGB888(33, 23, 151, 200, 56);
+}
+
+// Blink eyelids over eyes
+void blink() {
+  matrix->drawPixelRGB888(20, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 12, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 13, 151, 200, 56);
+  matrix->drawPixelRGB888(21, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(15, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(42, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(48, 14, 151, 200, 56);
+  matrix->drawPixelRGB888(20, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(16, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(17, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(18, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(19, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(43, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(44, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(45, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(46, 15, 151, 200, 56);
+  matrix->drawPixelRGB888(47, 15, 151, 200, 56);
+}
